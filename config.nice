@@ -1,0 +1,9 @@
+#! /bin/sh
+#
+# Created by configure
+
+CFLAGS='-m32' \
+CPPFLAGS='-m32' \
+'./configure' \
+'--enable-phaimi' \
+"$@"
