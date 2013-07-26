@@ -3,40 +3,94 @@
 
 /**
  * CONSTANTS:
- *
- * Errors:
- * NITRO_ERR_NONE
- * NITRO_ERR_NOT_RUNNING
- * NITRO_ERR_ENCRYPT "(pipe) frame encryption failed". This error can occur if a secure socket is unable to encrypt a frame using the remote public/local private keypair. It's possible the remote peer could have provided an invalid public key, or you have given an incorrect private key to nitro_sockopt_set_secure_identity.
- * NITRO_ERR_DECRYPT "(pipe) frame decryption failed". Frame decryption failed on SECURE frame data coming from the TCP socket. This can occur because of bad keys, invalid NONCE, any number of reasons.
- * NITRO_ERR_MAX_FRAME_EXCEEDED "(pipe) remote tried to send a frame larger than the maximum allowable size". The remote peer attempted to send a frame larger than the specified maximum allowable size.
- * NITRO_ERR_BAD_PROTOCOL_VERSION "(pipe) remote sent a Nitro protocol version that is unsupported by this application". A frame header contained a protocol version field that was either invalid or not implemented by this version of nitro.
- * NITRO_ERR_INVALID_CLEAR "(pipe) remote sent a unencrypted message over a secure socket". After HELLO, a non-encrypted message was sent by remote peer to this secure socket.
- * NITRO_ERR_DOUBLE_HANDSHAKE "(pipe) remote sent two HELLO packets on same connection". The remote peer sent the HELLO frame twice.
- * NITRO_ERR_INVALID_CERT "(pipe) remote identity/public key does not match the one required by this socket". Key validation is enabled (using nitro_sockopt_set_required_remote_ident) and the key provided by the remote peer did not match.
- * NITRO_ERR_NO_HANDSHAKE "(pipe) remote sent a non-HELLO packet before HELLO". The remote peer sent some other frame before HELLO.
- * NITRO_ERR_BAD_SUB "(pipe) remote sent a SUB packet that is too short to be valid". For pub/sub work, a subscription list was relayed that was invalid.
- * NITRO_ERR_BAD_HANDSHAKE "(pipe) remote sent a HELLO packet that is too short to be valid". An invalid HELLO frame was sent.
- * NITRO_ERR_BAD_SECURE "(pipe) remote sent a secure envelope on an insecure connection". The remote peer sent a secure frame when the local socket has is not secure (nitro_sockopt_set_secure has not been enabled)
- * NITRO_ERR_PARSE_BAD_TRANSPORT "invalid transport type for socket". Socket protocol was not "tcp" or "inproc".
- * NITRO_ERR_TCP_LOC_NOCOLON "TCP socket location did not contain a colon".
- * NITRO_ERR_TCP_LOC_BADPORT "TCP socket location did not contain an integer port number".
- * NITRO_ERR_TCP_LOC_BADIPV4 "TCP socket location was not a valid IPv4 address (a.b.c.d)".
- * NITRO_ERR_BAD_INPROC_OPT "inproc socket creation was given an unsupported socket option". An inproc socket was probably given an option documented with "Socket Type Restrictions" that require tcp-only.
- * NITRO_ERR_INPROC_ALREADY_BOUND "another inproc socket is already bound to that location".
- * NITRO_ERR_ERRNO A low-level socket operation failed (like EMFILE); check errno.NITRO_ERR_PARSE_BAD_TRANSPORT "invalid transport type for socket". Socket protocol was not "tcp" or "inproc".
- * NITRO_ERR_INPROC_NOT_BOUND "cannot connect to inproc: not bound". No inproc socket is bound at that location.
- * NITRO_ERR_EAGAIN - No frames were waiting in the incoming socket buffer, and NITRO_NOBLOCK was passed to the nitro_recv call.
- * NITRO_ERR_INPROC_NO_CONNECTIONS - The send operation was attempted on a bound inproc socket without any current peers.
- * NITRO_ERR_NO_RECIPIENT - The recipient identified by snd is no longer (or never was) in the connection table. 
- * NITRO_ERR_SUB_ALREADY - nitro_sub called with a prefix the socket is already subscribed to.
- * NITRO_ERR_SUB_MISSING - nitro_unsub called with a prefix the socket is not subscribed to.
- *
- * Other Constants:
- * NITRO_NOBLOCK - Do not block on this nitro_send call; return immediately
- * NITRO_REUSE - Copy/refcount the frame, and do not NULLify the pointer, so the application can reuse it.
  */
-
+ 
+ /**
+ * Errors:
+ */
+ // NITRO_ERR_NONE                  0
+ REGISTER_LONG_CONSTANT("NITRO_ERR_NONE", 0, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_ERRNO                 1
+ REGISTER_LONG_CONSTANT("NITRO_ERR_ERRNO", 1, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_ALREADY_RUNNING       2
+ REGISTER_LONG_CONSTANT("NITRO_ERR_ALREADY_RUNNING", 2, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_NOT_RUNNING           3
+ REGISTER_LONG_CONSTANT("NITRO_ERR_NOT_RUNNING", 3, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_TCP_LOC_NOCOLON       4
+ REGISTER_LONG_CONSTANT("NITRO_ERR_TCP_LOC_NOCOLON", 4, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_TCP_LOC_BADPORT       5
+ REGISTER_LONG_CONSTANT("NITRO_ERR_TCP_LOC_BADPORT", 5, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_TCP_LOC_BADIPV4       6
+ REGISTER_LONG_CONSTANT("NITRO_ERR_TCP_LOC_BADIPV4", 6, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_PARSE_BAD_TRANSPORT   7
+ REGISTER_LONG_CONSTANT("NITRO_ERR_PARSE_BAD_TRANSPORT", 7, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_EAGAIN                8
+ REGISTER_LONG_CONSTANT("NITRO_ERR_EAGAIN", 8, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_NO_RECIPIENT          9
+ REGISTER_LONG_CONSTANT("NITRO_ERR_NO_RECIPIENT", 9, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_ENCRYPT               10
+ REGISTER_LONG_CONSTANT("NITRO_ERR_ENCRYPT", 10, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_DECRYPT               11
+ REGISTER_LONG_CONSTANT("NITRO_ERR_DECRYPT", 11, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_INVALID_CLEAR         12
+ REGISTER_LONG_CONSTANT("NITRO_ERR_INVALID_CLEAR", 12, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_MAX_FRAME_EXCEEDED    13
+ REGISTER_LONG_CONSTANT("NITRO_ERR_MAX_FRAME_EXCEEDED", 13, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_BAD_PROTOCOL_VERSION  14
+ REGISTER_LONG_CONSTANT("NITRO_ERR_BAD_PROTOCOL_VERSION", 14, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_DOUBLE_HANDSHAKE      15
+ REGISTER_LONG_CONSTANT("NITRO_ERR_DOUBLE_HANDSHAKE", 15, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_NO_HANDSHAKE          16
+ REGISTER_LONG_CONSTANT("NITRO_ERR_NO_HANDSHAKE", 16, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_BAD_SUB               17
+ REGISTER_LONG_CONSTANT("NITRO_ERR_BAD_SUB", 17, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_BAD_HANDSHAKE         18
+ REGISTER_LONG_CONSTANT("NITRO_ERR_BAD_HANDSHAKE", 18, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_INVALID_CERT          19
+ REGISTER_LONG_CONSTANT("NITRO_ERR_INVALID_CERT", 19, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_BAD_INPROC_OPT        20
+ REGISTER_LONG_CONSTANT("NITRO_ERR_BAD_INPROC_OPT", 20, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_BAD_SECURE            21
+ REGISTER_LONG_CONSTANT("NITRO_ERR_BAD_SECURE", 21, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_INPROC_ALREADY_BOUND  22
+ REGISTER_LONG_CONSTANT("NITRO_ERR_INPROC_ALREADY_BOUND", 22, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_INPROC_NOT_BOUND      23
+ REGISTER_LONG_CONSTANT("NITRO_ERR_INPROC_NOT_BOUND", 23, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_INPROC_NO_CONNECTIONS 24
+ REGISTER_LONG_CONSTANT("NITRO_ERR_INPROC_NO_CONNECTIONS", 24, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_SUB_ALREADY           25
+ REGISTER_LONG_CONSTANT("NITRO_ERR_SUB_ALREADY", 25, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_SUB_MISSING           26
+ REGISTER_LONG_CONSTANT("NITRO_ERR_SUB_MISSING", 26, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_TCP_BAD_ANY           27
+ REGISTER_LONG_CONSTANT("NITRO_ERR_TCP_BAD_ANY", 27, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_ERR_GAI                   28
+ REGISTER_LONG_CONSTANT("NITRO_ERR_GAI", 28, CONST_CS | CONST_PERSISTENT); 
+ 
+ /**
+  * Frame Constants
+  */
+ // NITRO_FRAME_DATA                0
+ REGISTER_LONG_CONSTANT("NITRO_FRAME_DATA", 0, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_FRAME_SUB                 1
+ REGISTER_LONG_CONSTANT("NITRO_FRAME_SUB", 1, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_FRAME_HELLO               2 
+ REGISTER_LONG_CONSTANT("NITRO_FRAME_HELLO", 2, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_FRAME_SECURE              3
+ REGISTER_LONG_CONSTANT("NITRO_FRAME_SECURE", 4, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_MAX_FRAME 			    1024 // 1024 // 1024
+ REGISTER_LONG_CONSTANT("NITRO_MAX_FRAME", 1073741824, CONST_CS | CONST_PERSISTENT); 
+ 
+ /**
+ * Other Constants:
+ */
+ // NITRO_NOBLOCK
+ REGISTER_LONG_CONSTANT("NITRO_NOBLOCK", 0, CONST_CS | CONST_PERSISTENT); 
+ // NITRO_REUSE 					1
+ REGISTER_LONG_CONSTANT("NITRO_REUSE", 1, CONST_CS | CONST_PERSISTENT); 
+ // NITOR_NOWAIT                   	2
+ REGISTER_LONG_CONSTANT("NITOR_NOWAIT", 2, CONST_CS | CONST_PERSISTENT); 
+ 
 /**
  * int nitro_runtime_start();
  * @return 0 on success, <0 on error
