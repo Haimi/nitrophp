@@ -8,7 +8,6 @@ PHP_MINIT_FUNCTION(nitrophp);
 PHP_MSHUTDOWN_FUNCTION(nitrophp);
 
 PHP_FUNCTION(hello_world);
-PHP_FUNCTION(large_random);
 
 extern zend_module_entry nitrophp_module_entry;
 #define phpext_nitrophp_ptr &nitrophp_module_entry
